@@ -5,6 +5,8 @@ from db import DB
 from ingest import Ingestor
 from retriever import Retriever
 from rich import print
+from cli_text import CLI_BANNER, CLI_INTRO, CLI_HELP
+from config import *
 
 
 def main():
@@ -16,8 +18,8 @@ def main():
     # Initialize call_files from persistent DB
     call_files = set(db.get_all_file_paths())
 
-    print("[bold green]Conversational AI Copilot CLI[/bold green]")
-    print("Type 'help' for commands. Type 'exit' to quit.")
+    print(CLI_BANNER)
+    print(CLI_INTRO)
 
     while True:
         try:
@@ -30,7 +32,7 @@ def main():
         if cmd == "exit":
             break
         if cmd == "help":
-            print("Commands:\n  ingest a new call transcript from <path>\n  list my call ids\n  <ask any question about your calls>")
+            print(CLI_HELP)
             continue
         if cmd.startswith("ingest a new call transcript from "):
             path = cmd[len("ingest a new call transcript from "):].strip()
@@ -42,7 +44,6 @@ def main():
                 print(f"[red]Error ingesting:[/red] {e}")
             continue
         if cmd == "list my call ids":
-            # Always fetch the latest from DB for robustness
             call_files = set(db.get_all_file_paths())
             if not call_files:
                 print("No calls ingested yet.")
@@ -50,7 +51,6 @@ def main():
                 for f in call_files:
                     print(f)
             continue
-        # Modular RAG: treat every other input as a question
         results = retriever.retrieve(cmd, top_k=10)
         if not results:
             print("No relevant transcript segments found. Try ingesting a call transcript first.")

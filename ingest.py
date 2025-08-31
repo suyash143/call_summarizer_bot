@@ -1,7 +1,5 @@
 from utils import chunk_text
 
-# Handles transcript ingestion, chunking, embedding, and storage
-
 class Ingestor:
     def __init__(self, embedder, db):
         self.embedder = embedder
