@@ -7,9 +7,7 @@ from config.config import DEFAULT_CHROMA_COLLECTION, DEFAULT_CHROMA_PERSIST_DIR
 
 class DB:
     def __init__(self, collection_name=DEFAULT_CHROMA_COLLECTION, persist_directory=DEFAULT_CHROMA_PERSIST_DIR):
-        # Ensure directory exists
         os.makedirs(persist_directory, exist_ok=True)
-        # Use PersistentClient instead of Client for persistence
         self.client = chromadb.PersistentClient(path=persist_directory)
         self.collection = self.client.get_or_create_collection(collection_name)
         self.persist_directory = persist_directory
@@ -29,8 +27,6 @@ class DB:
         for field in required_fields:
             if field not in metadata:
                 raise ValueError(f"Missing required metadata field: {field}")
-        print(f"[DEBUG] add() called. persist_directory: {self.persist_directory}, collection_name: {self.collection.name}")
-        print(f"[DEBUG] Adding embedding shape: {embedding.shape if hasattr(embedding, 'shape') else type(embedding)}, metadata: {metadata}")
         if embedding.ndim == 2:
             embedding = embedding[0]
         emb_list = embedding.tolist()
@@ -65,7 +61,7 @@ class DB:
         results = self.collection.query(**query_args)
         out = []
         for i in range(len(results["ids"][0])):
-            meta = dict(results["metadatas"][0][i])  # Ensure mutable dict
+            meta = dict(results["metadatas"][0][i])
             meta["score"] = results["distances"][0][i]
             out.append(meta)
         return out

@@ -8,6 +8,14 @@ class Embedder:
         self.model = SentenceTransformer(model_name)
 
     def embed(self, text):
+        if isinstance(text, str):
+            if not text.strip():
+                raise ValueError("Input to embed() must be a non-empty string.")
+        elif isinstance(text, list):
+            if not all(isinstance(t, str) and t.strip() for t in text):
+                raise ValueError("All elements in input list to embed() must be non-empty strings.")
+        else:
+            raise TypeError("Input to embed() must be a string or list of strings.")
         embedding = self.model.encode(text)
         return np.array(embedding, dtype=np.float32)
 
