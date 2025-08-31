@@ -8,8 +8,8 @@ class Retriever:
     def retrieve(self, query, top_k=5):
         query_embedding = self.embedder.embed(query)
         results = self.db.search(query_embedding, top_k=top_k)
-        # print("HIGHLIGHTED RESULTS",)
-        # print("***********************"*20)
-        # print("Retrieved results:", results)
+        print("HIGHLIGHTED RESULTS",)
+        print("***********************"*20)
+        print("Retrieved results:", results)
         return results
 

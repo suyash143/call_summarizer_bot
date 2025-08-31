@@ -13,7 +13,8 @@ def main():
     ingestor = Ingestor(embedder, db)
     retriever = Retriever(embedder, db)
     llm = LLM()
-    call_files = set()
+    # Initialize call_files from persistent DB
+    call_files = set(db.get_all_file_paths())
 
     print("[bold green]Conversational AI Copilot CLI[/bold green]")
     print("Type 'help' for commands. Type 'exit' to quit.")
@@ -41,6 +42,8 @@ def main():
                 print(f"[red]Error ingesting:[/red] {e}")
             continue
         if cmd == "list my call ids":
+            # Always fetch the latest from DB for robustness
+            call_files = set(db.get_all_file_paths())
             if not call_files:
                 print("No calls ingested yet.")
             else:
@@ -59,4 +62,3 @@ def main():
         print("[bold]Source Segments:[/bold]")
         for r in results:
             print(f"- {r['text']}")
-

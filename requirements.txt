@@ -5,4 +5,4 @@ rich
 sentence-transformers
 numpy
 requests
-
+chromadb
