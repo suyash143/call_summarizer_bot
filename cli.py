@@ -7,6 +7,7 @@ from retriever import Retriever
 from rich.console import Console
 from rich.prompt import Prompt
 from cli_text import CLI_BANNER, CLI_INTRO, CLI_HELP, CLI_PROMPT, CLI_ERROR_STYLE, CLI_INFO_STYLE, CLI_ANSWER_STYLE, CLI_SOURCE_STYLE
+from prompts import PROMPT_TEMPLATE
 from config import *
 
 
@@ -57,7 +58,7 @@ def main():
             console.print("No relevant transcript segments found. Try ingesting a call transcript first.", style=CLI_ERROR_STYLE)
             continue
         context = "\n".join([r['text'] for r in results])
-        prompt = f"Answer the following question using only the provided transcript segments. Cite the relevant segment(s) in your answer.\nQuestion: {cmd}\nTranscript Segments:\n{context}"
+        prompt = PROMPT_TEMPLATE.format(context=context, question=cmd)
         answer = llm.ask(prompt)
         console.print(f"[bold]Answer:[/bold] [green]{answer}[/green]", style=CLI_ANSWER_STYLE)
         console.print("[bold]Source Segments:[/bold]", style=CLI_SOURCE_STYLE)
