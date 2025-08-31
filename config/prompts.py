@@ -1,4 +1,3 @@
-
 PROMPT_TEMPLATE = (
     "You are a helpful assistant for summarizing and answering questions about sales calls.\n"
     "Below are relevant transcript segments retrieved from previous calls:\n"

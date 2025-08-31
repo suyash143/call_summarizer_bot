@@ -1,62 +1,144 @@
 # Call Summarizer Bot
 
-A CLI-based Conversational AI Copilot for summarizing and querying your call transcripts using retrieval-augmented generation (RAG) and large language models (LLMs).
+A command-line Conversational AI Copilot for summarizing and querying your call transcripts using retrieval-augmented generation (RAG) and large language models (LLMs).
 
 ## Features
-- Ingest call transcripts from text files
-- Chunk, embed, and store transcripts in a vector database (FAISS)
+- Ingest call transcripts from plain text files
+- Chunk, embed, and store transcripts in a persistent vector database
 - Query your calls using natural language
 - Retrieve and summarize relevant call segments using LLMs
-- Simple command-line interface with helpful commands
+- Context-aware filtering for focused search
+- Simple, interactive CLI with helpful commands
 
-## Project Structure
-- `main.py`: Entry point; launches the CLI
-- `cli.py`: Command-line interface for ingesting and querying calls
-- `llm.py`: Embedding and LLM query logic
-- `db.py`: In-memory vector database using FAISS
-- `ingest.py`: Transcript ingestion, chunking, and embedding
-- `retriever.py`: Retrieves relevant transcript chunks for a query
-- `utils.py`: Utility functions (e.g., text chunking)
+## Installation & Setup
 
-## Installation
-1. Clone the repository
-2. Install dependencies:
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd call_summarizer_bot
+   ```
+2. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
-3. (Optional) Set up your `.env` file for any required API keys or endpoints
+3. **(Optional) Configure environment:**
+   - If your LLM or embedding provider requires API keys, create a `.env` file and add the necessary keys as environment variables.
 
 ## Usage
-Run the CLI:
+
+### Start the CLI
 ```bash
 python main.py
 ```
 
-### CLI Commands
-- `ingest a new call transcript from <path>`: Ingests a transcript file
-- `list my call ids`: Lists all ingested call files
-- `<ask any question about your calls>`: Ask any question; the bot will retrieve and summarize relevant segments
-- `help`: Show available commands
-- `exit`: Quit the CLI
-
-## Example
-```
-> ingest a new call transcript from 1_demo_call.txt
-Ingested 10 chunks from 1_demo_call.txt
-> list my call ids
-1_demo_call.txt
-> What were the main objections in the call?
-... (LLM-generated answer)
+### Ingest a Call Transcript
+Provide the path to a plain text transcript file:
+```bash
+ingest a new call transcript from <path-to-file.txt>
 ```
 
-## Requirements
-- Python 3.8+
-- See `requirements.txt` for Python dependencies
+### List All Ingested Calls
+```bash
+list my call ids
+```
 
-## Notes
-- The LLM endpoint and model can be configured in `llm.py`
-- This project is for demo/research purposes and does not persist data between runs
+### Select a Call for Focused Querying
+```bash
+select call <file_path>
+```
 
-## License
-MIT
+### Clear Selected Call (Search All Calls)
+```bash
+clear selected call
+```
 
+### Ask Questions About Your Calls
+Type any natural language question:
+```bash
+What were the main objections in the last call?
+Summarize the pricing discussion.
+```
+
+### Get Help
+```bash
+help
+```
+
+---
+
+## Example Workflow
+1. Ingest one or more transcript files.
+2. List available calls to see their file paths.
+3. (Optional) Select a specific call for focused queries.
+4. Ask questions or request summaries about your calls.
+5. Use `clear selected call` to broaden your search again.
+
+---
+
+## CLI Commands Reference
+- `ingest a new call transcript from <path>`: Ingest a transcript file
+- `list my call ids`: List all ingested call file paths
+- `select call <file_path>`: Focus queries on a specific call
+- `clear selected call`: Remove filter to search all calls
+- `help`: Show help and current selection
+- `<any question>`: Query or summarize your calls
+- `exit`: Exit the CLI
+
+---
+
+## Project Structure
+```
+call_summarizer_bot/
+│
+├── cli/                # CLI interface and related text
+│   ├── __init__.py
+│   ├── cli.py
+│   └── cli_text.py
+│
+├── core/               # Core logic: database, ingestion, retrieval, LLM, utils
+│   ├── __init__.py
+│   ├── db.py
+│   ├── ingest.py
+│   ├── retriever.py
+│   ├── llm.py
+│   └── utils.py
+│
+├── config/             # Configuration and prompts
+│   ├── __init__.py
+│   ├── config.py
+│   └── prompts.py
+│
+├── data/               # Example transcripts and user data
+│   ├── 1_demo_call.txt
+│   ├── 2_pricing_call.txt
+│   ├── 3_objection_call.txt
+│   └── 4_negotiation_call.txt
+│
+├── chroma/             # Vector DB storage (auto-generated, gitignored)
+│
+├── main.py             # Entry point
+├── requirements.txt
+├── README.md
+└── README_PROBLEM_STATEMENT.md
+```
+
+---
+
+## Customization & Extensibility
+- Swap out the LLM or embedding provider by editing `core/llm.py`.
+- Adjust chunking or metadata schema in `core/ingest.py` and `core/db.py`.
+- Add new CLI commands in `cli/cli.py` for advanced workflows.
+
+---
+
+## Troubleshooting & FAQ
+- **Database files change after each query:**
+  - The `chroma/` directory contains the vector database and is updated on every operation. Add it to your `.gitignore` to avoid tracking changes.
+- **No results found:**
+  - Make sure you have ingested at least one transcript file.
+- **API key errors:**
+  - Ensure your `.env` file is set up correctly if required by your LLM/embedding provider.
+
+---
+
+For further customization or support, please refer to the code comments or open an issue.

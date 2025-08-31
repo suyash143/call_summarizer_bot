@@ -1,4 +1,3 @@
-
 # LLM
 DEFAULT_EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 DEFAULT_LLM_BASE_URL = "http://192.168.29.17:11434/api/generate"
@@ -7,4 +6,3 @@ DEFAULT_LLM_MODEL = "llama2:7b-chat-q4_0"
 # Chroma DB
 DEFAULT_CHROMA_COLLECTION = "call_vectors"
 DEFAULT_CHROMA_PERSIST_DIR = "./chroma/"
-

@@ -1,4 +1,3 @@
-# Handles retrieval of relevant transcript segments
 
 class Retriever:
     def __init__(self, embedder, db):
