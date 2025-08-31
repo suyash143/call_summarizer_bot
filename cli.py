@@ -19,11 +19,16 @@ def main():
     llm = LLM()
     call_files = set(db.get_all_file_paths())
     console = Console()
-
+    selected_file = None
     console.print(CLI_BANNER)
     console.print(CLI_INTRO)
 
+    first_interaction = True  # Track if this is the first prompt
     while True:
+        if not first_interaction:
+            console.rule(style="dim")
+        else:
+            first_interaction = False
         try:
             cmd = Prompt.ask(CLI_PROMPT, console=console).strip()
         except (EOFError, KeyboardInterrupt):
@@ -34,7 +39,11 @@ def main():
         if cmd == "exit":
             break
         if cmd == "help":
-            console.print(CLI_HELP, style=CLI_INFO_STYLE)
+            console.print(CLI_HELP + "\n[bold]Advance Filteration commands:[/bold]\n- select call <file_path>\n- clear selected call", style=CLI_INFO_STYLE)
+            if selected_file:
+                console.print(f"[bold]Currently selected call:[/bold] {selected_file}", style=CLI_INFO_STYLE)
+            else:
+                console.print("[bold]Currently selected call:[/bold] None (searching all calls)", style=CLI_INFO_STYLE)
             continue
         if cmd.startswith("ingest a new call transcript from "):
             path = cmd[len("ingest a new call transcript from "):].strip()
@@ -53,7 +62,20 @@ def main():
                 for f in call_files:
                     console.print(f, style=CLI_INFO_STYLE)
             continue
-        results = retriever.retrieve(cmd, top_k=10)
+        if cmd.startswith("select call "):
+            file_candidate = cmd[len("select call "):].strip()
+            if file_candidate in call_files:
+                selected_file = file_candidate
+                console.print(f"Selected call: {selected_file}", style=CLI_INFO_STYLE)
+            else:
+                console.print(f"File not found: {file_candidate}", style=CLI_ERROR_STYLE)
+            continue
+        if cmd == "clear selected call":
+            selected_file = None
+            console.print("Cleared selected call. All calls will be searched.", style=CLI_INFO_STYLE)
+            continue
+        metadata_filter = {'file_path': selected_file} if selected_file else None
+        results = retriever.retrieve(cmd, top_k=10, metadata_filter=metadata_filter)
         if not results:
             console.print("No relevant transcript segments found. Try ingesting a call transcript first.", style=CLI_ERROR_STYLE)
             continue
@@ -64,3 +86,4 @@ def main():
         console.print("[bold]Source Segments:[/bold]", style=CLI_SOURCE_STYLE)
         for r in results:
             console.print(f"- {r['text']}", style=CLI_SOURCE_STYLE)
+        console.rule(style="dim")
