@@ -1,7 +1,7 @@
 import requests
 from sentence_transformers import SentenceTransformer
 import numpy as np
-from config import DEFAULT_EMBEDDING_MODEL, DEFAULT_LLM_BASE_URL, DEFAULT_LLM_MODEL
+from config.config import DEFAULT_EMBEDDING_MODEL, DEFAULT_LLM_BASE_URL, DEFAULT_LLM_MODEL
 
 class Embedder:
     def __init__(self, model_name=DEFAULT_EMBEDDING_MODEL):

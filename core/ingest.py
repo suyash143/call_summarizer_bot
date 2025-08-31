@@ -1,4 +1,4 @@
-from utils import chunk_text
+from core.utils import chunk_text
 
 class Ingestor:
     def __init__(self, embedder, db):

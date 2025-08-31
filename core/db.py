@@ -2,9 +2,8 @@ import chromadb
 import chromadb.config
 import numpy as np
 import uuid,os
-from config import DEFAULT_CHROMA_COLLECTION, DEFAULT_CHROMA_PERSIST_DIR
+from config.config import DEFAULT_CHROMA_COLLECTION, DEFAULT_CHROMA_PERSIST_DIR
 
-# Handles vector DB and metadata storage using Chroma (persistent)
 
 class DB:
     def __init__(self, collection_name=DEFAULT_CHROMA_COLLECTION, persist_directory=DEFAULT_CHROMA_PERSIST_DIR):

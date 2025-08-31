@@ -1,15 +1,13 @@
-# CLI interface for the chatbot
 
-from llm import Embedder, LLM
-from db import DB
-from ingest import Ingestor
-from retriever import Retriever
+from core.llm import Embedder, LLM
+from core.db import DB
+from core.ingest import Ingestor
+from core.retriever import Retriever
 from rich.console import Console
 from rich.prompt import Prompt
-from cli_text import CLI_BANNER, CLI_INTRO, CLI_HELP, CLI_PROMPT, CLI_ERROR_STYLE, CLI_INFO_STYLE, CLI_ANSWER_STYLE, CLI_SOURCE_STYLE
-from prompts import PROMPT_TEMPLATE
-from config import *
-
+from cli.cli_text import CLI_BANNER, CLI_INTRO, CLI_HELP, CLI_PROMPT, CLI_ERROR_STYLE, CLI_INFO_STYLE, CLI_ANSWER_STYLE, CLI_SOURCE_STYLE
+from config.prompts import PROMPT_TEMPLATE
+from config.config import *
 
 def main():
     embedder = Embedder()
@@ -23,7 +21,7 @@ def main():
     console.print(CLI_BANNER)
     console.print(CLI_INTRO)
 
-    first_interaction = True  # Track if this is the first prompt
+    first_interaction = True
     while True:
         if not first_interaction:
             console.rule(style="dim")
